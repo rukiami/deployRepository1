@@ -1,0 +1,102 @@
+{% extends "account/base.html" %}
+{% load static %}
+
+{% block title %}カレンダー{% endblock %}
+
+{% block head %}
+<link href="{% static 'fullcalendar/main.min.css' %}" rel='stylesheet' />
+<script src="{% static 'fullcalendar/main.min.js' %}"></script>
+<script src="{% static 'fullcalendar/locales-all.min.js' %}"></script>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <button id="addEventButton">イベント追加</button>
+    <div id="addEventForm" style="display: none;">
+        <input type="text" id="eventTitle" placeholder="イベント名">
+        <input type="date" id="eventDate">
+        <button onclick="addEvent()">イベント保存</button>
+    </div>
+
+    <div id='calendar'></div>
+    <div id='eventDisplay'></div>
+</div>
+
+{% comment %} <link href="path_to_calendar_css" rel="stylesheet">
+<script src="path_to_calendar_js"> 
+</script>
+{% endblock %} {% endcomment %}
+
+{% comment %} <link href="{% static 'fullcalendar/main.min.css' %}" rel='stylesheet' /> {% comment %} {% comment %} {% endcomment %}
+{% comment %} <script src="{% static 'fullcalendar/main.min.js' %}"></script>
+<script src="{% static 'fullcalendar/locales-all.min.js' %}"></script> {% endcomment %}
+{% comment %} {% endblock %} {% endcomment %} 
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    var calendarEl = document.getElementById('calendar');
+    var calendar = new FullCalendar.Calendar(calendarEl, {
+        initialView: 'dayGridMonth',
+        locale: 'ja',
+        events: '/path_to_get_events/', // イベントデータを取得するURL
+        dateClick: function(info) {
+            // 日付がクリックされたときの処理
+            var dateStr = info.dateStr; // クリックされた日付の取得
+            fetchEventData(dateStr);    
+        }
+    }); 
+    calendar.render();
+});
+    
+// イベント追加ボタンの動作
+document.getElementById('addEventButton').addEventListener('click', function() {
+    document.getElementById('addEventForm').style.display = 'block';
+});
+    
+window.addEvent = function() {
+    var title = document.getElementById('eventTitle').value;
+    var date = document.getElementById('eventDate').value;
+    var calendarApi = calendar.getApi();
+    
+    if (title && date) {
+        calendarApi.addEvent({
+            title: title,
+            start: date
+        });
+    }
+};
+    
+// サーバーからイベントデータを取得する関数
+function fetchEventData(dateStr) {
+    fetch('/get-event-data/' + dateStr) // Djangoビューからデータを取得するためのURL
+    .then(response => response.json())
+    .then(data => {
+        displayEventData(data); // データを表示する関数を呼び出し
+    });
+}
+    
+// データを表示する関数
+function displayEventData(data) {
+    var displayElement = document.getElementById('eventDisplay');
+    displayElement.innerHTML = ''; // 既存の内容をクリア
+    
+    data.forEach(event => {
+        if (event.image_url) {
+            var imgElement = document.createElement('img');
+            imgElement.src = event.image_url;
+            imgElement.alt = 'Event Image';
+            displayElement.appendChild(imgElement);
+        }
+    
+        var eventDetails = document.createElement('div');
+        eventDetails.innerHTML = 'イベント: ' + event.title + '<br>場所: ' + event.location;
+        displayElement.appendChild(eventDetails);
+    });
+}
+</script>
+{% endblock %}
+    
+
+    
+  
+    

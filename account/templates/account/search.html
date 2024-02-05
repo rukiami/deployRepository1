@@ -1,0 +1,27 @@
+{% extends "account/base.html" %}
+
+{% block title %}Search{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1>Search</h1>
+    <form method="GET" action="{% url 'account:search' %}">
+        <div class="form-group">
+            <label for="query">Search Query:</label>
+            <input type="text" id="query" name="q" class="form-control" placeholder="Enter search term...">
+        </div>
+        <button type="submit" class="btn btn-primary">Search</button>
+    </form>
+
+    {% if query %}
+    <h2>Results for "{{ query }}":</h2>
+    <ul>
+        {% for result in results %}
+        <li>{{ result }}</li>
+        {% empty %}
+        <li>No results found.</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+</div>
+{% endblock %}

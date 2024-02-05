@@ -1,0 +1,85 @@
+{% extends "account/base.html" %}
+{% block title %}ホーム{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1 class="my-5"></h1>
+    <p>{{ user.username }}only my gourmet diary</p>
+
+    <!-- 店舗一覧を表示するセクション -->
+    
+    <!-- 店舗一覧表示セクション終了 -->
+    <a href="{% url 'account:logout' %}">ログアウト</a>
+    <div id='calendar'></div>
+</div>   
+
+    <!-- FullCalendarのスクリプトとスタイルシート -->
+    <!-- FullCalendarのコードはコメントアウトされています -->
+    {% comment %}
+    {% comment %} <link href='https://unpkg.com/fullcalendar@5.10.1/main.min.css' rel='stylesheet' />
+    <script src='https://unpkg.com/fullcalendar@5.10.1/main.min.js'></script>
+    <script src='https://unpkg.com/fullcalendar@5.10.1/locales-all.min.js'></script> {% endcomment %}
+
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        var calendarEl = document.getElementById('calendar');
+        var calendar = new FullCalendar.Calendar(calendarEl, {
+          initialView: 'dayGridMonth',
+          locale: 'ja'
+        });
+        calendar.render();
+      });
+    </script>
+
+
+<!-- 店舗詳細を表示するためのJavaScript -->
+{% comment %} <script>
+  function showDetails(genre, location, dateAdded) {
+      var details = 'ジャンル: ' + genre + '<br>' +
+                    '場所: ' + location + '<br>' +
+                    '日付: ' + dateAdded;
+      document.getElementById('shopDetails').innerHTML = details;
+  }
+</script> {% endcomment %}
+
+    {% comment %} <a href="{% url 'account:logout' %}">ログアウト</a> {% endcomment %}
+    {% comment %} <div id='calendar'></div>
+</div>
+
+<!-- FullCalendarのスクリプトとスタイルシート -->
+<link href='https://unpkg.com/fullcalendar@5.10.1/main.min.css' rel='stylesheet' />
+<script src='https://unpkg.com/fullcalendar@5.10.1/main.min.js'></script>
+<script src='https://unpkg.com/fullcalendar@5.10.1/locales-all.min.js'></script>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    var calendarEl = document.getElementById('calendar');
+    var calendar = new FullCalendar.Calendar(calendarEl, {
+      initialView: 'dayGridMonth',
+      locale: 'ja'
+    });
+    calendar.render();
+  });
+</script> {% endcomment %}
+
+<!-- ここからナビゲーションバーの追加 -->
+<nav class="navbar fixed-bottom navbar-light bg-light">
+  <div class="container-fluid">
+    <ul class="nav navbar-nav d-flex justify-content-around w-100">
+      <li class="nav-item">
+        <a class="nav-link" href="{% url 'account:home' %}">ホーム</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="{% url 'account:calendar' %}">カレンダー</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="{% url 'account:shop_list' %}">店舗一覧</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="{% url 'account:search' %}">検索</a>
+      </li>
+    </ul>
+  </div>
+</nav>
+{% endblock %}
+

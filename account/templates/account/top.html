@@ -1,0 +1,13 @@
+{% extends "account/base.html" %}
+
+{% block title %}Only my gourmet diary{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1 class="my-5">Only my gourmet diary</h1>
+    <a href="{% url 'account:login' %}" class="btn btn-outline-primary">ログイン</a>
+    <a href="{% url 'account:signup' %}" class="btn btn-outline-primary">新規登録</a>
+</div>
+{% endblock %}
+
+
